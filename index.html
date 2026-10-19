@@ -6,41 +6,440 @@
   <title>Funil de Scripts — WhatsApp (Segurança)</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #2d3748; min-height: 100vh; }
-    header { background: #000; color: #fff; padding: 28px 20px 22px; text-align: center; }
-    header .logo { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
-    header h1 { font-size: 22px; font-weight: 700; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      color: #2d3748;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #000000;
+      color: white;
+      padding: 36px 24px 28px;
+      text-align: center;
+    }
+    header .logo {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #aaaaaa;
+      margin-bottom: 8px;
+    }
+    header h1 { font-size: 24px; font-weight: 700; }
     header h1 span { color: #4ade80; }
-    header p { margin-top: 8px; font-size: 12.5px; color: #aaa; line-height: 1.5; }
+    header p {
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: #aaaaaa;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
 
-    .content { max-width: 720px; margin: 0 auto; padding: 22px 12px 60px; }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      background: #000000;
+      padding: 0 24px 18px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 9px 22px;
+      border: none;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tab-btn.igreen      { background: #00A651; color: white; }
+    .tab-btn.terapeutas  { background: #9f7aea; color: white; }
+    .tab-btn.doterra     { background: #d97706; color: white; }
+    .tab-btn.segeletronica { background: #2b6cb0; color: white; }
+    .tab-btn.dicas       { background: #6b46c1; color: white; }
+    .tab-btn.followup    { background: #2c7a7b; color: white; }
+    .tab-btn.active, .tab-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+      filter: brightness(1.18);
+    }
 
-    .resumo { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; font-size: 13px; line-height: 1.6; }
-    .resumo strong.titulo { display: block; margin-bottom: 6px; font-size: 13.5px; }
-    .resumo .gap { color: #9b2c2c; font-weight: 700; }
+    .content {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px 12px 60px;
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
 
-    .etapa { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .etapa-head { display: flex; align-items: center; gap: 10px; background: #1a202c; color: #fff; margin: -16px -16px 14px; padding: 12px 16px; border-radius: 12px 12px 0 0; }
-    .etapa-num { width: 30px; height: 30px; border-radius: 50%; background: #25d366; color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .etapa-titulo { font-size: 15px; font-weight: 700; }
-    .etapa-desc { font-size: 12px; color: #718096; margin-bottom: 10px; }
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .section-title .badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .igreen .badge      { background: #c6f6d5; color: #276749; }
+    .terapeutas .badge  { background: #e9d8fd; color: #553c9a; }
+    .doterra .badge     { background: #fef3c7; color: #92400e; }
+    .segeletronica .badge { background: #bee3f8; color: #2c5282; }
 
-    .msgs { background: #e5ddd5; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-    .msg { align-self: flex-end; max-width: 88%; background: #dcf8c6; color: #1a1a1a; padding: 7px 10px; border-radius: 8px; font-size: 13px; line-height: 1.45; white-space: pre-wrap; box-shadow: 0 1px 1px rgba(0,0,0,0.08); }
-    .msg.espera { align-self: center; background: #6b46c1; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; border-radius: 20px; padding: 4px 12px; box-shadow: none; }
+    .aviso-topo {
+      background: #f0fff4;
+      border: 1px solid #9ae6b4;
+      border-radius: 10px;
+      padding: 13px 15px;
+      font-size: 12.5px;
+      color: #22543d;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .aviso-topo strong.titulo { display: block; margin-bottom: 4px; font-size: 13px; }
 
-    .metricas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .metricas label { font-size: 11px; font-weight: 700; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
-    .metricas input { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 8px; font: inherit; font-size: 14px; }
-    .proxima { grid-column: 1 / -1; font-size: 12.5px; color: #2d3748; background: #f7fafc; border-radius: 8px; padding: 8px 10px; }
-    .proxima.alerta { background: #fed7d7; color: #9b2c2c; font-weight: 700; }
-    .proxima.ok { background: #c6f6d5; color: #276749; font-weight: 700; }
+    .dicas-gerais {
+      background: #faf5ff;
+      border: 1px solid #d6bcfa;
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      line-height: 1.4;
+      font-size: 12px;
+      color: #44337a;
+    }
+    .dicas-gerais strong.titulo { display: block; margin-bottom: 6px; font-size: 12.5px; color: #553c9a; }
+    .dicas-gerais ul { padding-left: 16px; display: flex; flex-direction: column; gap: 2px; }
+    .dicas-gerais ul li::marker { color: #805ad5; }
 
-    .gap-tag { display: inline-block; margin-left: 6px; font-size: 10px; background: #9b2c2c; color: #fff; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .chat-wrap {
+      background: #fafafa;
+      border: 1px solid #dbdbdb;
+      border-radius: 12px;
+      padding: 16px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bubble-row {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 2px;
+    }
+    .bubble-row.right { align-items: flex-end; }
+    .bubble-row.left  { align-items: flex-start; }
+
+    .bubble-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 3px;
+      padding: 0 6px;
+    }
+    .bubble-row.right .bubble-label { color: #276749; text-align: right; }
+    .bubble-row.left  .bubble-label { color: #2b6cb0; }
+
+    .bubble {
+      max-width: 82%;
+      padding: 9px 13px 8px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+      position: relative;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    }
+    .bubble-row.right .bubble {
+      background: #dcf5e4;
+      color: #1a1a1a;
+      border-radius: 18px 4px 18px 18px;
+    }
+    .bubble-row.right .bubble::after {
+      content: '';
+      position: absolute;
+      top: 0; right: -8px;
+      border-width: 8px 0 0 8px;
+      border-style: solid;
+      border-color: #dcf5e4 transparent;
+    }
+    .bubble-row.left .bubble {
+      background: #ffffff;
+      color: #1a1a1a;
+      border-radius: 4px 18px 18px 18px;
+      border: 1px solid #efefef;
+    }
+    .bubble-row.left .bubble::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -8px;
+      border-width: 8px 8px 0 0;
+      border-style: solid;
+      border-color: #ffffff transparent;
+    }
+
+    .copy-btn {
+      margin-top: 7px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 11px;
+      border: 1px solid #00A651;
+      background: transparent;
+      color: #00A651;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      align-self: flex-end;
+    }
+    .copy-btn:hover { background: #00A651; color: white; border-color: #00A651; }
+    .copy-btn.copied { background: #005c28; border-color: #005c28; color: white; }
+
+    .inline-hint {
+      font-size: 10.5px;
+      color: #975a16;
+      font-style: italic;
+      margin-top: 4px;
+      max-width: 82%;
+      text-align: right;
+      line-height: 1.4;
+    }
+
+    .wait-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 16px;
+      margin: 8px auto 10px;
+      background: #6b46c1;
+      border: none;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      width: fit-content;
+    }
+
+    .dica-card {
+      background: #fffbeb;
+      border-left: 4px solid #f6e05e;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin: 6px 0 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .dica-card .dica-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #975a16;
+      margin-bottom: 4px;
+    }
+    .dica-card .dica-text {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #744210;
+    }
+
+    .audio-card {
+      background: #fff7ed;
+      border: 2px dashed #f6ad55;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+    }
+    .audio-card .audio-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #c05621;
+      margin-bottom: 10px;
+    }
+    .audio-card .audio-icon {
+      width: 28px;
+      height: 28px;
+      background: #ed8936;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .audio-card .audio-script {
+      background: #ffffff;
+      border-left: 3px solid #ed8936;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #2d3748;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+    .audio-card .audio-tip {
+      font-size: 11px;
+      color: #975a16;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #cbd5e0;
+      margin: 18px 0;
+      opacity: 0.6;
+    }
+
+    .branch-tag-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 8px;
+    }
+    .branch-tag-row::before, .branch-tag-row::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #cbd5e0;
+    }
+    .branch-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .tag-sim { background: #c6f6d5; color: #276749; }
+    .tag-nao { background: #fed7d7; color: #9b2c2c; }
+
+    .branch-choice {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 18px;
+    }
+    .branch-btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .branch-btn.sim { background: #c6f6d5; color: #276749; border: 2px solid #9ae6b4; }
+    .branch-btn.nao { background: #fed7d7; color: #9b2c2c; border: 2px solid #feb2b2; }
+    .branch-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.12); }
+    .branch-btn.selected.sim { background: #38a169; color: white; border-color: #38a169; }
+    .branch-btn.selected.nao { background: #e53e3e; color: white; border-color: #e53e3e; }
+
+    .caminho-panel { display: none; }
+    .caminho-panel.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #00A651;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 999;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 480px) {
-      .metricas { grid-template-columns: 1fr; }
+      header { padding: 24px 16px 20px; }
+      header h1 { font-size: 19px; }
+      header p { font-size: 12px; }
+      .tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        padding: 0 12px 16px;
+        overflow-x: unset;
+      }
+      .tab-btn { padding: 10px 8px; font-size: 12px; border-radius: 12px; text-align: center; }
+      .content { padding: 16px 10px 60px; }
+      .section-title { font-size: 15px; }
+      .bubble { max-width: 92%; font-size: 13px; }
+      .dica-card { padding: 8px 12px; }
+      .dica-card .dica-text { font-size: 11.5px; }
+      .aviso-topo { font-size: 12px; padding: 11px 13px; }
+      .copy-btn { font-size: 10px; padding: 4px 9px; }
     }
+      .security-channels { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px; }
+    .security-channel-pill { border:1px solid #90cdf4; background:#ebf8ff; color:#2c5282; padding:11px 18px; border-radius:999px; font:inherit; font-weight:600; cursor:pointer; }
+    .security-channel-pill.active { background:#2b6cb0; border-color:#2b6cb0; color:#fff; }
+    .security-channel-pill:focus-visible { outline:3px solid #63b3ed; outline-offset:3px; }
+    #se-channel-instagram[hidden], #se-channel-whatsapp[hidden] { display:none; }
+      #se-tab-instagram { background:#fce7f3; border-color:#f9a8d4; color:#9d174d; }
+    #se-tab-instagram.active { background:#be185d; border-color:#be185d; color:#fff; }
+    #se-tab-instagram:focus-visible { outline-color:#ec4899; }
+    #se-tab-whatsapp { background:#dcfce7; border-color:#86efac; color:#166534; }
+    #se-tab-whatsapp.active { background:#15803d; border-color:#15803d; color:#fff; }
+    #se-tab-whatsapp:focus-visible { outline-color:#22c55e; }
+    /* Canal "Direct do Instagram": mensagens para copiar em rosa (no WhatsApp continuam verdes). */
+    #se-channel-instagram .bubble-row.right .bubble { background:#fce7f3; }
+    #se-channel-instagram .bubble-row.right .bubble::after { border-color:#fce7f3 transparent; }
+    #se-channel-instagram .bubble-row.right .bubble-label { color:#9d174d; }
+    #se-channel-instagram .copy-btn { border-color:#be185d; color:#be185d; }
+    #se-channel-instagram .copy-btn:hover { background:#be185d; border-color:#be185d; color:#fff; }
+    #se-channel-instagram .copy-btn.copied { background:#831843; border-color:#831843; color:#fff; }
+  
+    .etiqueta { display:inline-block; margin:22px 0 8px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; background:#c6f6d5; color:#276749; padding:4px 12px; border-radius:20px; }
+    .funil-contagem { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0 4px; }
+    .funil-contagem label { font-size:11px; font-weight:700; color:#4a5568; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:4px; }
+    .funil-contagem input { width:100%; padding:7px 9px; border:1px solid #cbd5e0; border-radius:8px; font:inherit; font-size:14px; }
+    .funil-resultado { font-size:12px; border-radius:8px; padding:7px 10px; background:#f7fafc; color:#2d3748; margin-bottom:6px; }
+    .funil-resultado.alerta { background:#fed7d7; color:#9b2c2c; font-weight:700; }
+    .funil-resultado.ok { background:#c6f6d5; color:#276749; font-weight:700; }
+    .funil-resumo { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:12px 14px; font-size:13px; margin-bottom:10px; }
+    .funil-resumo .gap { color:#9b2c2c; font-weight:700; }
   </style>
 </head>
 <body>
@@ -48,176 +447,200 @@
 <header>
   <div class="logo">Prospecção — Bryan · Segurança</div>
   <h1>Funil de <span>Scripts</span> — WhatsApp</h1>
-  <p>Caminho do dono. Preencha quantos leads chegaram em cada etapa para ver onde eles param.</p>
+  <p>Caminho do dono. Cada etiqueta é uma etapa. Preencha quantos leads chegaram em cada uma para ver onde eles param.</p>
 </header>
 
 <div class="content">
 
-  <div class="resumo" id="resumo">
-    <strong class="titulo">Onde o funil perde mais</strong>
-    <div id="resumo-texto">Preencha os números de "Entraram" em cada etapa para ver a queda.</div>
+  <div class="funil-resumo">
+    <strong>Onde o funil perde mais</strong><br>
+    <span id="resumo-texto">Preencha os números de cada etapa para ver a queda.</span>
   </div>
 
-  <!-- ETAPA 1 -->
-  <section class="etapa" data-etapa="1">
-    <div class="etapa-head">
-      <div class="etapa-num">1</div>
-      <div class="etapa-titulo">Etapa 1 — Abertura no WhatsApp</div>
+  <div class="etiqueta">Etapa 1 — Abertura no WhatsApp</div>
+  <div class="chat-wrap">
+    <div class="bubble-row right">
+      <div class="bubble" id="et1-1">Opaa, tudo bem?</div>
+      <button class="copy-btn" onclick="copiar('et1-1', this)">📋 Copiar</button>
     </div>
-    <div class="etapa-desc">Primeiro contato. Pergunta se é o comercial ou o proprietário.</div>
-    <div class="msgs">
-      <div class="msg">Opaa, tudo bem?</div>
-      <div class="msg">Mandei uma mensagem no Direct de vocês ontem, mas imagino que lá seja bem movimentado e corrido pra ver.</div>
-      <div class="msg">Por aqui é o WhatsApp do comercial ou falo com o proprietário da NOMEDAEMPRESA?</div>
-      <div class="msg espera">⏳ Aguardar resposta</div>
+    <div class="bubble-row right">
+      <div class="bubble" id="et1-2">Mandei uma mensagem no Direct de vocês ontem, mas imagino que lá seja bem movimentado e corrido pra ver.</div>
+      <button class="copy-btn" onclick="copiar('et1-2', this)">📋 Copiar</button>
     </div>
-    <div class="metricas">
-      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
-      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
-      <div class="proxima" data-proxima></div>
+    <div class="bubble-row right">
+      <div class="bubble" id="et1-3">Por aqui é o WhatsApp do comercial ou falo com o proprietário da NOMEDAEMPRESA?</div>
+      <button class="copy-btn" onclick="copiar('et1-3', this)">📋 Copiar</button>
     </div>
-  </section>
+  </div>
+  <div class="wait-card">⏳ Aguardar resposta</div>
+  <div class="funil-contagem">
+    <div><label>Leads que chegaram</label><input type="number" min="0" data-etapa="1" data-campo="entraram" oninput="atualizarFunil()"></div>
+    <div><label>Avançaram para a próxima</label><input type="number" min="0" data-etapa="1" data-campo="avancaram" oninput="atualizarFunil()"></div>
+  </div>
+  <div class="funil-resultado" id="res-1"></div>
+  <div class="divider"></div>
 
-  <!-- ETAPA 2 -->
-  <section class="etapa" data-etapa="2">
-    <div class="etapa-head">
-      <div class="etapa-num">2</div>
-      <div class="etapa-titulo">Etapa 2 — Contexto do conteúdo</div>
+  <div class="etiqueta">Etapa 2 — Contexto do conteúdo</div>
+  <div class="chat-wrap">
+    <div class="bubble-row right">
+      <div class="bubble" id="et2-1">Ahh legal! é que apareceu um conteúdo da sua empresa no meu Instagram sobre Monitoramento e achei muito bom os conteúdos que vocês trazem pros seus clientes por lá!</div>
+      <button class="copy-btn" onclick="copiar('et2-1', this)">📋 Copiar</button>
     </div>
-    <div class="etapa-desc">Cita o conteúdo que viu no Instagram e pede permissão para uma pergunta.</div>
-    <div class="msgs">
-      <div class="msg">Ahh legal! é que apareceu um conteúdo da sua empresa no meu Instagram sobre Monitoramento e achei muito bom os conteúdos que vocês trazem pros seus clientes por lá!</div>
-      <div class="msg">Posso fazer uma pergunta rapidinho?</div>
-      <div class="msg espera">⏳ Aguardar resposta</div>
+    <div class="bubble-row right">
+      <div class="bubble" id="et2-2">Posso fazer uma pergunta rapidinho?</div>
+      <button class="copy-btn" onclick="copiar('et2-2', this)">📋 Copiar</button>
     </div>
-    <div class="metricas">
-      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
-      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
-      <div class="proxima" data-proxima></div>
-    </div>
-  </section>
+  </div>
+  <div class="wait-card">⏳ Aguardar resposta</div>
+  <div class="funil-contagem">
+    <div><label>Leads que chegaram</label><input type="number" min="0" data-etapa="2" data-campo="entraram" oninput="atualizarFunil()"></div>
+    <div><label>Avançaram para a próxima</label><input type="number" min="0" data-etapa="2" data-campo="avancaram" oninput="atualizarFunil()"></div>
+  </div>
+  <div class="funil-resultado" id="res-2"></div>
+  <div class="divider"></div>
 
-  <!-- ETAPA 3 -->
-  <section class="etapa" data-etapa="3">
-    <div class="etapa-head">
-      <div class="etapa-num">3</div>
-      <div class="etapa-titulo">Etapa 3 — Pergunta de diagnóstico</div>
+  <div class="etiqueta">Etapa 3 — Pergunta de diagnóstico</div>
+  <div class="chat-wrap">
+    <div class="bubble-row right">
+      <div class="bubble" id="et3-1">A minha dúvida era justamente porque vi que vocês já têm um posicionamento muito bom por lá...</div>
+      <button class="copy-btn" onclick="copiar('et3-1', this)">📋 Copiar</button>
     </div>
-    <div class="etapa-desc">Pergunta se a captação hoje vem de anúncio ou de indicação.</div>
-    <div class="msgs">
-      <div class="msg">A minha dúvida era justamente porque vi que vocês já têm um posicionamento muito bom por lá...</div>
-      <div class="msg">Mas fiquei curioso em saber se isso tem atraído novos clientes/orçamentos ou o principal meio de ter novas vendas é por indicação mesmo?</div>
-      <div class="msg espera">⏳ Aguardar resposta</div>
+    <div class="bubble-row right">
+      <div class="bubble" id="et3-2">Mas fiquei curioso em saber se isso tem atraído novos clientes/orçamentos ou o principal meio de ter novas vendas é por indicação mesmo?</div>
+      <button class="copy-btn" onclick="copiar('et3-2', this)">📋 Copiar</button>
     </div>
-    <div class="metricas">
-      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
-      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
-      <div class="proxima" data-proxima></div>
-    </div>
-  </section>
+  </div>
+  <div class="wait-card">⏳ Aguardar resposta</div>
+  <div class="funil-contagem">
+    <div><label>Leads que chegaram</label><input type="number" min="0" data-etapa="3" data-campo="entraram" oninput="atualizarFunil()"></div>
+    <div><label>Avançaram para a próxima</label><input type="number" min="0" data-etapa="3" data-campo="avancaram" oninput="atualizarFunil()"></div>
+  </div>
+  <div class="funil-resultado" id="res-3"></div>
+  <div class="divider"></div>
 
-  <!-- ETAPA 4 -->
-  <section class="etapa" data-etapa="4">
-    <div class="etapa-head">
-      <div class="etapa-num">4</div>
-      <div class="etapa-titulo">Etapa 4 — Oferta + perfil + investimento</div>
+  <div class="etiqueta">Etapa 4 — Oferta + perfil + investimento</div>
+  <div class="chat-wrap">
+    <div class="bubble-row right">
+      <div class="bubble" id="et4-1">Te perguntei isso amigo, porque sou responsável por ajudar empresas de monitoramento como a sua</div>
+      <button class="copy-btn" onclick="copiar('et4-1', this)">📋 Copiar</button>
     </div>
-    <div class="etapa-desc">Apresenta o trabalho, manda o perfil do Instagram e o valor diário.</div>
-    <div class="msgs">
-      <div class="msg">Te perguntei isso amigo, porque sou responsável por ajudar empresas de monitoramento como a sua</div>
-      <div class="msg">Esse é o perfil do meu instagram:
+    <div class="bubble-row right">
+      <div class="bubble" id="et4-2">Esse é o perfil do meu instagram:
 https://www.instagram.com/bryan.trafegoseg/</div>
-      <div class="msg">Onde auxilio elas a implementarem uma estrutura de captação de novos contratos de monitoramento diariamente pelos anúncios nas redes sociais</div>
-      <div class="msg">Por menos de R$20,00 diário, geramos em média 150 novos contatos por mês da sua região pro comercial trabalhar.</div>
-      <div class="msg">Você acredita que esse tipo de implementação em trazer volume de novos clientes ajudaria no momento atual da sua empresa NOME?</div>
-      <div class="msg espera">⏳ Aguardar resposta</div>
+      <button class="copy-btn" onclick="copiar('et4-2', this)">📋 Copiar</button>
     </div>
-    <div class="metricas">
-      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
-      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
-      <div class="proxima" data-proxima></div>
+    <div class="bubble-row right">
+      <div class="bubble" id="et4-3">Onde auxilio elas a implementarem uma estrutura de captação de novos contratos de monitoramento diariamente pelos anúncios nas redes sociais</div>
+      <button class="copy-btn" onclick="copiar('et4-3', this)">📋 Copiar</button>
     </div>
-  </section>
+    <div class="bubble-row right">
+      <div class="bubble" id="et4-4">Por menos de R$20,00 diário, geramos em média 150 novos contatos por mês da sua região pro comercial trabalhar.</div>
+      <button class="copy-btn" onclick="copiar('et4-4', this)">📋 Copiar</button>
+    </div>
+    <div class="bubble-row right">
+      <div class="bubble" id="et4-5">Você acredita que esse tipo de implementação em trazer volume de novos clientes ajudaria no momento atual da sua empresa NOME?</div>
+      <button class="copy-btn" onclick="copiar('et4-5', this)">📋 Copiar</button>
+    </div>
+  </div>
+  <div class="wait-card">⏳ Aguardar resposta</div>
+  <div class="funil-contagem">
+    <div><label>Leads que chegaram</label><input type="number" min="0" data-etapa="4" data-campo="entraram" oninput="atualizarFunil()"></div>
+    <div><label>Avançaram para a próxima</label><input type="number" min="0" data-etapa="4" data-campo="avancaram" oninput="atualizarFunil()"></div>
+  </div>
+  <div class="funil-resultado" id="res-4"></div>
+  <div class="divider"></div>
 
-  <!-- ETAPA 5 -->
-  <section class="etapa" data-etapa="5">
-    <div class="etapa-head">
-      <div class="etapa-num">5</div>
-      <div class="etapa-titulo">Etapa 5 — Convite para reunião</div>
-    </div>
-    <div class="etapa-desc">Quando o lead responde SIM na etapa 4. Convida para a reunião de 25/30 min.</div>
-    <div class="msgs">
-      <div class="msg">Perfeito NOME! Que ótimo que você tem essa consciência!
+  <div class="etiqueta">Etapa 5 — Convite para reunião</div>
+  <div class="chat-wrap">
+    <div class="bubble-row right">
+      <div class="bubble" id="et5-1">Perfeito NOME! Que ótimo que você tem essa consciência!
 Me conta, podemos agendar um encontro on-line de 25/30 minutinhos?</div>
-      <div class="msg">Onde nele irei fazer um diagnóstico da situação atual da NOMEDAEMPRESA e mostrar como os anúncios com tão pouco investimento, podem gerar esses resultados pra sua empresa diariamente.</div>
-      <div class="msg">Tenho alguns horários hoje na parte da tarde, fica ok pra você?</div>
+      <button class="copy-btn" onclick="copiar('et5-1', this)">📋 Copiar</button>
     </div>
-    <div class="metricas">
-      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
-      <div><label>Marcaram reunião</label><input type="number" min="0" data-campo="avancaram" /></div>
-      <div class="proxima" data-proxima></div>
+    <div class="bubble-row right">
+      <div class="bubble" id="et5-2">Onde nele irei fazer um diagnóstico da situação atual da NOMEDAEMPRESA e mostrar como os anúncios com tão pouco investimento, podem gerar esses resultados pra sua empresa diariamente.</div>
+      <button class="copy-btn" onclick="copiar('et5-2', this)">📋 Copiar</button>
     </div>
-  </section>
+    <div class="bubble-row right">
+      <div class="bubble" id="et5-3">Tenho alguns horários hoje na parte da tarde, fica ok pra você?</div>
+      <button class="copy-btn" onclick="copiar('et5-3', this)">📋 Copiar</button>
+    </div>
+  </div>
+  <div class="wait-card">⏳ Aguardar resposta</div>
+  <div class="funil-contagem">
+    <div><label>Leads que chegaram</label><input type="number" min="0" data-etapa="5" data-campo="entraram" oninput="atualizarFunil()"></div>
+    <div><label>Avançaram para a próxima</label><input type="number" min="0" data-etapa="5" data-campo="avancaram" oninput="atualizarFunil()"></div>
+  </div>
+  <div class="funil-resultado" id="res-5"></div>
+  <div class="divider"></div>
 
 </div>
 
 <script>
-  const STORAGE_KEY = 'funil-scripts-seguranca-wa';
-  const etapas = Array.from(document.querySelectorAll('.etapa'));
+  var CHAVE = 'funil-scripts-seguranca-wa';
+  function lerDados() { try { return JSON.parse(localStorage.getItem(CHAVE)) || {}; } catch (e) { return {}; } }
+  function salvarDados(d) { try { localStorage.setItem(CHAVE, JSON.stringify(d)); } catch (e) {} }
 
-  function lerDados() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) { return {}; }
-  }
-  function salvarDados(dados) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); } catch (e) {}
-  }
-
-  function atualizar() {
-    const dados = {};
-    etapas.forEach(sec => {
-      const n = sec.dataset.etapa;
-      dados[n] = {};
-      sec.querySelectorAll('input[data-campo]').forEach(inp => {
-        dados[n][inp.dataset.campo] = inp.value === '' ? null : Number(inp.value);
-      });
+  function atualizarFunil() {
+    var dados = {};
+    document.querySelectorAll('input[data-etapa]').forEach(function (inp) {
+      var n = inp.dataset.etapa;
+      dados[n] = dados[n] || {};
+      dados[n][inp.dataset.campo] = inp.value === '' ? null : Number(inp.value);
     });
     salvarDados(dados);
 
-    let maiorGap = null;
-    etapas.forEach((sec, i) => {
-      const proxima = sec.querySelector('[data-proxima]');
-      const atual = dados[sec.dataset.etapa];
-      const seguinte = etapas[i + 1] ? dados[etapas[i + 1].dataset.etapa] : null;
-      proxima.className = 'proxima';
-      if (!seguinte || atual.entraram == null || atual.entraram === 0 || seguinte.entraram == null) {
-        proxima.textContent = seguinte ? 'Preencha "Entraram" aqui e na próxima etapa para ver a queda.' : 'Última etapa.';
+    var ordem = ['1', '2', '3', '4', '5'];
+    var maior = null;
+    ordem.forEach(function (n, i) {
+      var el = document.getElementById('res-' + n);
+      var atual = dados[n] || {};
+      var prox = ordem[i + 1] ? (dados[ordem[i + 1]] || {}) : null;
+      el.className = 'funil-resultado';
+      if (!prox) { el.textContent = 'Última etapa.'; return; }
+      if (!atual.entraram || prox.entraram == null) {
+        el.textContent = 'Preencha "Leads que chegaram" aqui e na etapa seguinte para ver a queda.';
         return;
       }
-      const taxa = Math.round((seguinte.entraram / atual.entraram) * 100);
-      const perdidos = atual.entraram - seguinte.entraram;
-      const queda = 100 - taxa;
-      proxima.textContent = `Passaram para a etapa ${i + 2}: ${taxa}% (${perdidos} perdidos, queda de ${queda}%)`;
-      proxima.classList.add(queda >= 50 ? 'alerta' : 'ok');
-      if (maiorGap === null || queda > maiorGap.queda) maiorGap = { etapa: i + 1, queda, perdidos };
+      var queda = 100 - Math.round((prox.entraram / atual.entraram) * 100);
+      el.textContent = 'Foram para a etapa ' + (i + 2) + ': ' + (100 - queda) + '% (' + (atual.entraram - prox.entraram) + ' sumiram, queda de ' + queda + '%)';
+      el.classList.add(queda >= 50 ? 'alerta' : 'ok');
+      if (maior === null || queda > maior.queda) maior = { etapa: Number(n), queda: queda, perdidos: atual.entraram - prox.entraram };
     });
-
-    const resumoTexto = document.getElementById('resumo-texto');
-    resumoTexto.innerHTML = maiorGap
-      ? `Maior queda: entre a etapa ${maiorGap.etapa} e a ${maiorGap.etapa + 1} — <span class="gap">${maiorGap.queda}% não avançaram</span> (${maiorGap.perdidos} leads).`
-      : 'Preencha os números de "Entraram" em cada etapa para ver a queda.';
+    document.getElementById('resumo-texto').innerHTML = maior
+      ? 'Maior queda: entre a etapa ' + maior.etapa + ' e a ' + (maior.etapa + 1) + ' — <span class="gap">' + maior.queda + '% não avançaram</span> (' + maior.perdidos + ' leads).'
+      : 'Preencha os números de cada etapa para ver a queda.';
   }
 
-  // Restaura o que já foi digitado
-  const salvos = lerDados();
-  etapas.forEach(sec => {
-    const n = sec.dataset.etapa;
-    sec.querySelectorAll('input[data-campo]').forEach(inp => {
-      const valor = salvos[n] && salvos[n][inp.dataset.campo];
-      if (valor != null) inp.value = valor;
-      inp.addEventListener('input', atualizar);
-    });
+  var salvos = lerDados();
+  document.querySelectorAll('input[data-etapa]').forEach(function (inp) {
+    var v = salvos[inp.dataset.etapa] && salvos[inp.dataset.etapa][inp.dataset.campo];
+    if (v != null) inp.value = v;
   });
-  atualizar();
+  atualizarFunil();
+
+  function copiar(id, btn) {
+    var texto = document.getElementById(id).innerText;
+    var ok = function () {
+      btn.textContent = '✅ Copiado';
+      btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 1500);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(texto).then(ok).catch(function () { copiarAntigo(texto, ok); });
+    } else {
+      copiarAntigo(texto, ok);
+    }
+  }
+  function copiarAntigo(texto, ok) {
+    var ta = document.createElement('textarea');
+    ta.value = texto;
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); ok(); } catch (e) {}
+    ta.remove();
+  }
 </script>
 
 </body>
