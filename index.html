@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Funil de Scripts — WhatsApp (Segurança)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #2d3748; min-height: 100vh; }
+    header { background: #000; color: #fff; padding: 28px 20px 22px; text-align: center; }
+    header .logo { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
+    header h1 { font-size: 22px; font-weight: 700; }
+    header h1 span { color: #4ade80; }
+    header p { margin-top: 8px; font-size: 12.5px; color: #aaa; line-height: 1.5; }
+
+    .content { max-width: 720px; margin: 0 auto; padding: 22px 12px 60px; }
+
+    .resumo { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; font-size: 13px; line-height: 1.6; }
+    .resumo strong.titulo { display: block; margin-bottom: 6px; font-size: 13.5px; }
+    .resumo .gap { color: #9b2c2c; font-weight: 700; }
+
+    .etapa { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .etapa-head { display: flex; align-items: center; gap: 10px; background: #1a202c; color: #fff; margin: -16px -16px 14px; padding: 12px 16px; border-radius: 12px 12px 0 0; }
+    .etapa-num { width: 30px; height: 30px; border-radius: 50%; background: #25d366; color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .etapa-titulo { font-size: 15px; font-weight: 700; }
+    .etapa-desc { font-size: 12px; color: #718096; margin-bottom: 10px; }
+
+    .msgs { background: #e5ddd5; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .msg { align-self: flex-end; max-width: 88%; background: #dcf8c6; color: #1a1a1a; padding: 7px 10px; border-radius: 8px; font-size: 13px; line-height: 1.45; white-space: pre-wrap; box-shadow: 0 1px 1px rgba(0,0,0,0.08); }
+    .msg.espera { align-self: center; background: #6b46c1; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; border-radius: 20px; padding: 4px 12px; box-shadow: none; }
+
+    .metricas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .metricas label { font-size: 11px; font-weight: 700; color: #4a5568; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+    .metricas input { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 8px; font: inherit; font-size: 14px; }
+    .proxima { grid-column: 1 / -1; font-size: 12.5px; color: #2d3748; background: #f7fafc; border-radius: 8px; padding: 8px 10px; }
+    .proxima.alerta { background: #fed7d7; color: #9b2c2c; font-weight: 700; }
+    .proxima.ok { background: #c6f6d5; color: #276749; font-weight: 700; }
+
+    .gap-tag { display: inline-block; margin-left: 6px; font-size: 10px; background: #9b2c2c; color: #fff; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+
+    @media (max-width: 480px) {
+      .metricas { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Prospecção — Bryan · Segurança</div>
+  <h1>Funil de <span>Scripts</span> — WhatsApp</h1>
+  <p>Caminho do dono. Preencha quantos leads chegaram em cada etapa para ver onde eles param.</p>
+</header>
+
+<div class="content">
+
+  <div class="resumo" id="resumo">
+    <strong class="titulo">Onde o funil perde mais</strong>
+    <div id="resumo-texto">Preencha os números de "Entraram" em cada etapa para ver a queda.</div>
+  </div>
+
+  <!-- ETAPA 1 -->
+  <section class="etapa" data-etapa="1">
+    <div class="etapa-head">
+      <div class="etapa-num">1</div>
+      <div class="etapa-titulo">Etapa 1 — Abertura no WhatsApp</div>
+    </div>
+    <div class="etapa-desc">Primeiro contato. Pergunta se é o comercial ou o proprietário.</div>
+    <div class="msgs">
+      <div class="msg">Opaa, tudo bem?</div>
+      <div class="msg">Mandei uma mensagem no Direct de vocês ontem, mas imagino que lá seja bem movimentado e corrido pra ver.</div>
+      <div class="msg">Por aqui é o WhatsApp do comercial ou falo com o proprietário da NOMEDAEMPRESA?</div>
+      <div class="msg espera">⏳ Aguardar resposta</div>
+    </div>
+    <div class="metricas">
+      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
+      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
+      <div class="proxima" data-proxima></div>
+    </div>
+  </section>
+
+  <!-- ETAPA 2 -->
+  <section class="etapa" data-etapa="2">
+    <div class="etapa-head">
+      <div class="etapa-num">2</div>
+      <div class="etapa-titulo">Etapa 2 — Contexto do conteúdo</div>
+    </div>
+    <div class="etapa-desc">Cita o conteúdo que viu no Instagram e pede permissão para uma pergunta.</div>
+    <div class="msgs">
+      <div class="msg">Ahh legal! é que apareceu um conteúdo da sua empresa no meu Instagram sobre Monitoramento e achei muito bom os conteúdos que vocês trazem pros seus clientes por lá!</div>
+      <div class="msg">Posso fazer uma pergunta rapidinho?</div>
+      <div class="msg espera">⏳ Aguardar resposta</div>
+    </div>
+    <div class="metricas">
+      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
+      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
+      <div class="proxima" data-proxima></div>
+    </div>
+  </section>
+
+  <!-- ETAPA 3 -->
+  <section class="etapa" data-etapa="3">
+    <div class="etapa-head">
+      <div class="etapa-num">3</div>
+      <div class="etapa-titulo">Etapa 3 — Pergunta de diagnóstico</div>
+    </div>
+    <div class="etapa-desc">Pergunta se a captação hoje vem de anúncio ou de indicação.</div>
+    <div class="msgs">
+      <div class="msg">A minha dúvida era justamente porque vi que vocês já têm um posicionamento muito bom por lá...</div>
+      <div class="msg">Mas fiquei curioso em saber se isso tem atraído novos clientes/orçamentos ou o principal meio de ter novas vendas é por indicação mesmo?</div>
+      <div class="msg espera">⏳ Aguardar resposta</div>
+    </div>
+    <div class="metricas">
+      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
+      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
+      <div class="proxima" data-proxima></div>
+    </div>
+  </section>
+
+  <!-- ETAPA 4 -->
+  <section class="etapa" data-etapa="4">
+    <div class="etapa-head">
+      <div class="etapa-num">4</div>
+      <div class="etapa-titulo">Etapa 4 — Oferta + perfil + investimento</div>
+    </div>
+    <div class="etapa-desc">Apresenta o trabalho, manda o perfil do Instagram e o valor diário.</div>
+    <div class="msgs">
+      <div class="msg">Te perguntei isso amigo, porque sou responsável por ajudar empresas de monitoramento como a sua</div>
+      <div class="msg">Esse é o perfil do meu instagram:
+https://www.instagram.com/bryan.trafegoseg/</div>
+      <div class="msg">Onde auxilio elas a implementarem uma estrutura de captação de novos contratos de monitoramento diariamente pelos anúncios nas redes sociais</div>
+      <div class="msg">Por menos de R$20,00 diário, geramos em média 150 novos contatos por mês da sua região pro comercial trabalhar.</div>
+      <div class="msg">Você acredita que esse tipo de implementação em trazer volume de novos clientes ajudaria no momento atual da sua empresa NOME?</div>
+      <div class="msg espera">⏳ Aguardar resposta</div>
+    </div>
+    <div class="metricas">
+      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
+      <div><label>Avançaram</label><input type="number" min="0" data-campo="avancaram" /></div>
+      <div class="proxima" data-proxima></div>
+    </div>
+  </section>
+
+  <!-- ETAPA 5 -->
+  <section class="etapa" data-etapa="5">
+    <div class="etapa-head">
+      <div class="etapa-num">5</div>
+      <div class="etapa-titulo">Etapa 5 — Convite para reunião</div>
+    </div>
+    <div class="etapa-desc">Quando o lead responde SIM na etapa 4. Convida para a reunião de 25/30 min.</div>
+    <div class="msgs">
+      <div class="msg">Perfeito NOME! Que ótimo que você tem essa consciência!
+Me conta, podemos agendar um encontro on-line de 25/30 minutinhos?</div>
+      <div class="msg">Onde nele irei fazer um diagnóstico da situação atual da NOMEDAEMPRESA e mostrar como os anúncios com tão pouco investimento, podem gerar esses resultados pra sua empresa diariamente.</div>
+      <div class="msg">Tenho alguns horários hoje na parte da tarde, fica ok pra você?</div>
+    </div>
+    <div class="metricas">
+      <div><label>Entraram</label><input type="number" min="0" data-campo="entraram" /></div>
+      <div><label>Marcaram reunião</label><input type="number" min="0" data-campo="avancaram" /></div>
+      <div class="proxima" data-proxima></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'funil-scripts-seguranca-wa';
+  const etapas = Array.from(document.querySelectorAll('.etapa'));
+
+  function lerDados() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function salvarDados(dados) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(dados)); } catch (e) {}
+  }
+
+  function atualizar() {
+    const dados = {};
+    etapas.forEach(sec => {
+      const n = sec.dataset.etapa;
+      dados[n] = {};
+      sec.querySelectorAll('input[data-campo]').forEach(inp => {
+        dados[n][inp.dataset.campo] = inp.value === '' ? null : Number(inp.value);
+      });
+    });
+    salvarDados(dados);
+
+    let maiorGap = null;
+    etapas.forEach((sec, i) => {
+      const proxima = sec.querySelector('[data-proxima]');
+      const atual = dados[sec.dataset.etapa];
+      const seguinte = etapas[i + 1] ? dados[etapas[i + 1].dataset.etapa] : null;
+      proxima.className = 'proxima';
+      if (!seguinte || atual.entraram == null || atual.entraram === 0 || seguinte.entraram == null) {
+        proxima.textContent = seguinte ? 'Preencha "Entraram" aqui e na próxima etapa para ver a queda.' : 'Última etapa.';
+        return;
+      }
+      const taxa = Math.round((seguinte.entraram / atual.entraram) * 100);
+      const perdidos = atual.entraram - seguinte.entraram;
+      const queda = 100 - taxa;
+      proxima.textContent = `Passaram para a etapa ${i + 2}: ${taxa}% (${perdidos} perdidos, queda de ${queda}%)`;
+      proxima.classList.add(queda >= 50 ? 'alerta' : 'ok');
+      if (maiorGap === null || queda > maiorGap.queda) maiorGap = { etapa: i + 1, queda, perdidos };
+    });
+
+    const resumoTexto = document.getElementById('resumo-texto');
+    resumoTexto.innerHTML = maiorGap
+      ? `Maior queda: entre a etapa ${maiorGap.etapa} e a ${maiorGap.etapa + 1} — <span class="gap">${maiorGap.queda}% não avançaram</span> (${maiorGap.perdidos} leads).`
+      : 'Preencha os números de "Entraram" em cada etapa para ver a queda.';
+  }
+
+  // Restaura o que já foi digitado
+  const salvos = lerDados();
+  etapas.forEach(sec => {
+    const n = sec.dataset.etapa;
+    sec.querySelectorAll('input[data-campo]').forEach(inp => {
+      const valor = salvos[n] && salvos[n][inp.dataset.campo];
+      if (valor != null) inp.value = valor;
+      inp.addEventListener('input', atualizar);
+    });
+  });
+  atualizar();
+</script>
+
+</body>
+</html>
